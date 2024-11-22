@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Méthode d'Archimède - Approximation de Pi</title>
+    <style>
+        canvas {
+            display: block;
+            margin: 20px auto;
+            border: 1px solid black;
+        }
+        #info {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin-top: 10px;
+        }
+        #formula {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="archimedeCanvas" width="400" height="400"></canvas>
+    <div id="formula"></div>
+    <div id="info">Approximation de π : Calcul en cours...</div>
+
+    <script>
+        const canvas = document.getElementById("archimedeCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const width = canvas.width;
+        const height = canvas.height;
+        const radius = width / 3; // Rayon du cercle
+        const centerX = width / 2;
+        const centerY = height / 2;
+
+        let sides = 4; // Nombre initial de côtés des polygones
+        const maxSides = 100; // Nombre maximum de côtés
+        const delay = 1000; // Temps en ms entre chaque étape
+
+        // Dessine un cercle
+        function drawCircle() {
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        // Dessine un polygone régulier
+        function drawPolygon(sides, radius, color) {
+            const angleStep = (2 * Math.PI) / sides;
+            ctx.beginPath();
+            for (let i = 0; i < sides; i++) {
+                const x = centerX + radius * Math.cos(i * angleStep);
+                const y = centerY + radius * Math.sin(i * angleStep);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+        }
+
+        // Calcule les périmètres des polygones
+        function calculatePerimeters(sides) {
+            const angle = Math.PI / sides;
+            const innerPerimeter = sides * 2 * radius * Math.sin(angle); // Polygone inscrit
+            const outerPerimeter = sides * 2 * radius * Math.tan(angle); // Polygone circonscrit
+            return { innerPerimeter, outerPerimeter };
+        }
+
+        // Formule Mathématique
+        function updateFormula(sides, innerPerimeter, outerPerimeter) {
+            const innerPi = innerPerimeter / (2 * radius);
+            const outerPi = outerPerimeter / (2 * radius);
+
+            document.getElementById("formula").innerHTML = `
+                Polygone inscrit : \( \\pi \\approx ${innerPerimeter.toFixed(6)} / (2R) \\)<br>
+                Polygone circonscrit : \( \\pi \\approx ${outerPerimeter.toFixed(6)} / (2R) \\)<br>
+                Approximation actuelle : [${innerPi.toFixed(6)} ; ${outerPi.toFixed(6)}]
+            `;
+        }
+
+        // Animation principale
+        function animate() {
+            if (sides > maxSides) return;
+
+            // Effacer le canvas
+            ctx.clearRect(0, 0, width, height);
+
+            // Dessiner le cercle
+            drawCircle();
+
+            // Dessiner les polygones
+            drawPolygon(sides, radius, "blue"); // Polygone inscrit
+            drawPolygon(sides, radius / Math.cos(Math.PI / sides), "red"); // Polygone circonscrit
+
+            // Calculer l'approximation de π
+            const { innerPerimeter, outerPerimeter } = calculatePerimeters(sides);
+            const innerPi = innerPerimeter / (2 * radius);
+            const outerPi = outerPerimeter / (2 * radius);
+
+            // Mettre à jour l'affichage de la formule
+            updateFormula(sides, innerPerimeter, outerPerimeter);
+
+            // Mettre à jour l'interface utilisateur
+            document.getElementById("info").innerHTML = `
+                Approximation de π : Entre ${innerPi.toFixed(6)} et ${outerPi.toFixed(6)}<br>
+                Nombre de côtés : ${sides}
+            `;
+
+            // Augmenter le nombre de côtés
+            sides += 1;
+
+            // Rejouer l'animation après un délai
+            setTimeout(animate, delay);
+        }
+
+        // Lancer l'animation
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approximation de Pi - Monte Carlo</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: 20px auto;
+        }
+        #info {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="monteCarloCanvas" width="400" height="400"></canvas>
+    <div id="info">Approximation de π : Calcul en cours...</div>
+
+    <script>
+        const canvas = document.getElementById("monteCarloCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const width = canvas.width;
+        const height = canvas.height;
+
+        const totalPoints = 100000; // Nombre total de points à générer
+        let insideCircle = 0; // Compteur de points à l'intérieur du cercle
+        let currentPoint = 0;
+
+        // Fonction pour dessiner un point
+        function drawPoint(x, y, isInside) {
+            ctx.beginPath();
+            ctx.arc(x, y, 1, 0, 1 * Math.PI);
+            ctx.fillStyle = isInside ? "blue" : "red";
+            ctx.fill();
+        }
+
+        // Dessiner le carré et le cercle
+        function drawCanvas() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Dessiner le cercle
+            ctx.beginPath();
+            ctx.arc(width / 2, height / 2, width / 2, 0, 2 * Math.PI);
+            ctx.strokeStyle = "black";
+            ctx.stroke();
+
+            // Dessiner le carré
+            ctx.strokeRect(0, 0, width, height);
+        }
+
+        // Fonction principale pour générer des points
+        function generatePoint() {
+            if (currentPoint >= totalPoints) return;
+
+            const pointsPerFrame = 1; // Augmente ce nombre pour aller plus vite
+
+            for (let i = 0; i < pointsPerFrame && currentPoint < totalPoints; i++) {
+                // Générer un point aléatoire dans le carré
+                const x = Math.random();
+                const y = Math.random();
+
+                // Coordonner dans le canvas
+                const canvasX = x * width;
+                const canvasY = y * height;
+
+                // Vérifier si le point est dans le cercle
+                const isInside = (x - 0.5) ** 2 + (y - 0.5) ** 2 <= 0.25;
+                if (isInside) insideCircle++;
+
+                // Dessiner le point
+                drawPoint(canvasX, canvasY, isInside);
+
+                currentPoint++;
+            }
+
+            // Calculer l'approximation de π
+            const piApproximation = (insideCircle / currentPoint) * 4;
+            document.getElementById("info").textContent = `Approximation de π : ${piApproximation.toFixed(6)} (Points générés : ${currentPoint})`;
+
+            // Requête pour la prochaine frame
+            requestAnimationFrame(generatePoint);
+        }
+
+        // Initialiser l'animation
+        drawCanvas();
+        generatePoint();
+    </script>
+</body>
+</html>

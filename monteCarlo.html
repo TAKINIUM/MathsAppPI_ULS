@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approximation de Pi - Monte Carlo</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: 20px auto;
+        }
+        #info {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin-top: 10px;
+        }
+        #graphs {
+            display: flex;
+            justify-content: space-around;
+        }
+        #graphs > div {
+            width: 450px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Importation de Chart.js -->
+</head>
+<body>
+    <div id="infoBox">
+        <div id="info">Approximation de π : Calcul en cours...</div>
+    </div>
+    
+    <div id="graphs">
+        <div>
+            <canvas id="monteCarloCanvas" width="450" height="450"></canvas>
+            <div>Animation des points</div>
+        </div>
+        <div>
+            <canvas id="graphCanvas" width="450" height="450"></canvas>
+            <div>Graphique de l'approximation</div>
+        </div>
+    </div>
+
+    <script src="monteCarlo.js"></script>
+</body>
+</html>

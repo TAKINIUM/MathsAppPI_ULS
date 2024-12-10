@@ -1,34 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Produit de Wallis</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-    #formula {
-      font-size: 1.5em;
-      margin: 20px 0;
-      word-wrap: break-word;
-    }
-    #chart {
-      margin: auto;
-      width: 80%;
-      height: 400px;
-    }
-  </style>
-</head>
-<body>
-  <h1>Le Produit de Wallis</h1>
-  <div id="formula">\( P = \frac{2}{1} \cdot \frac{2}{3} \)</div>
-  <div id="chart"></div>
-  <script src="wallis.js"></script>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Produit de Wallis</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+                margin: 0;
+                padding: 0;
+            }
+            #formula {
+                font-size: 1.5em;
+                margin: 20px 0;
+                word-wrap: break-word;
+            }
+                #chart {
+                margin: auto;
+                width: 80%;
+                height: 400px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Le Produit de Wallis</h1>
+        <div id="formula">\( P = \frac{2}{1} \cdot \frac{2}{3} \)</div>
+        <div id="chart"></div>
+        <button id="backToDiapo" onclick="goToMainPage(8)">Retour au diaporama</button> 
+        <script src="retourDiapo.js"></script>
+        <script src="wallis.js"></script>
+    </body>
 </html>

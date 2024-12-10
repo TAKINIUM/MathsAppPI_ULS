@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Présentation Interactive</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+        }
+
+        iframe {
+            border: none;
+            margin: 20px 0;
+            width: 90%;
+            height: 90vh;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <iframe id="googleSlidesIframe" 
+        src="https://docs.google.com/presentation/d/1kNzO26xUImX86H_z09Y680wIT0uVrMJE1O1PRY2qA7k/embed?start=false&loop=false">
+    </iframe>
+    
+    <div>
+        <button onclick="goToAnimation('archimede.html')">Méthode d'Archimède</button>
+        <button onclick="goToAnimation('monteCarlo.html')">Méthode de Monte-Carlo</button>
+        <button onclick="goToAnimation('wallis.html')">Produit de Wallis</button>
+    </div>
+
+    <script src="index.js"></script>
+
+</body>
+</html>

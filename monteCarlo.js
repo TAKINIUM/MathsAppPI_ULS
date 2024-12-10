@@ -7,16 +7,13 @@ const graphCtx = graphCanvas.getContext("2d");
 const width = monteCarloCanvas.width;
 const height = monteCarloCanvas.height;
 
-const totalPoints = 1000000; // Nombre total de points à générer
+const totalPoints = 1000000;
 let insideCircle = 0;
 let currentPoint = 0;
 let pointsHistory = [];
 let curvePoints = [];
 
-// Dessiner le carré et le cercle sur le canvas d'animation
 function drawCanvas() {
-    // Ne pas effacer le canvas pour conserver tous les points
-    // MonteCarloCtx.clearRect(0, 0, width, height); // Ne pas effacer le canvas, afin de garder les points
 
     // Dessiner le cercle
     monteCarloCtx.beginPath();
@@ -89,7 +86,7 @@ function generatePoint() {
     drawGraph();
 
     // Requête pour la prochaine frame (réduit la vitesse d'animation)
-    setTimeout(() => requestAnimationFrame(generatePoint), 100); // Délai de 100ms entre chaque frame pour ralentir l'animation
+    setTimeout(() => requestAnimationFrame(generatePoint), 1); // Délai de 100ms entre chaque frame pour ralentir l'animation
 }
 
 // Initialisation du graphique Chart.js
@@ -116,9 +113,9 @@ const chart = new Chart(graphCtx, {
                 min: 3,   // Limiter la valeur minimale à 3
             },
             x: {
-                max: 1000, // Limiter l'axe des X à 1000
+                max: 100000, // Limiter l'axe des X à 1000
                 ticks: {
-                    stepSize: 100,  // Les ticks sont espacés de 100
+                    stepSize: 1,  // Les ticks sont espacés de 100
                 }
             }
         },

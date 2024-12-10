@@ -1,12 +1,10 @@
-// Paramètres de l'animation
 const iterations = 1000;
-const displayLimit = 200; // Nombre maximum de points à afficher
+const displayLimit = 200;
 let product = 1;
 let values = [];
-let animationSpeed = 400; // Démarrage lent
-let stopThreshold = 0.00001; // Seuil pour stopper les mises à jour visuelles
+let animationSpeed = 400;
+let stopThreshold = 0.00001;
 
-// Sélection du graphique et création de l'échelle
 const width = 800, height = 400;
 const svg = d3.select("#chart")
   .append("svg")
@@ -21,7 +19,6 @@ const yScale = d3.scaleLinear()
   .domain([1.2, 2])
   .range([height - 50, 50]);
 
-// Axes
 const xAxis = d3.axisBottom(xScale).ticks(10);
 const yAxis = d3.axisLeft(yScale).ticks(10);
 
@@ -52,6 +49,16 @@ const piText = svg.append("text")
   .attr("fill", "red")
   .style("font-size", "14px")
   .text(`π/2 ≈ ${product.toFixed(10)}`);
+
+// Ajout de la ligne verte pour \(\pi/2\)
+const piLine = svg.append("line")
+  .attr("x1", xScale(0))
+  .attr("y1", yScale(Math.PI / 2))
+  .attr("x2", xScale(displayLimit))
+  .attr("y2", yScale(Math.PI / 2))
+  .attr("stroke", "green")
+  .attr("stroke-width", 2)
+  .attr("stroke-dasharray", "4"); // Ligne en pointillés
 
 // Fonction pour formater la formule avec ellipses
 function formatFormula(terms, maxTerms = 10) {

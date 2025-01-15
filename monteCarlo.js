@@ -7,7 +7,7 @@ const graphCtx = graphCanvas.getContext("2d");
 const width = monteCarloCanvas.width;
 const height = monteCarloCanvas.height;
 
-const totalPoints = 1000000;
+const totalPoints = 50000000;
 let insideCircle = 0;
 let currentPoint = 0;
 let pointsHistory = [];
@@ -15,27 +15,26 @@ let curvePoints = [];
 
 function drawCanvas() {
 
-    // Dessiner le cercle
+
     monteCarloCtx.beginPath();
     monteCarloCtx.arc(width / 2, height / 2, width / 2, 0, 2 * Math.PI);
     monteCarloCtx.strokeStyle = "black";
     monteCarloCtx.stroke();
 
-    // Dessiner le carré
+
     monteCarloCtx.strokeRect(0, 0, width, height);
 }
 
-// Dessiner la courbe de Monte Carlo sur le canvas du graphique
+
 function drawGraph() {
-    // Mise à jour de la courbe
+
     if (curvePoints.length > 0) {
-        chart.data.datasets[0].data = curvePoints.map(p => p.y);  // Mise à jour de la courbe
-        chart.data.labels = curvePoints.map(p => p.x);            // Mise à jour des labels
+        chart.data.datasets[0].data = curvePoints.map(p => p.y); 
+        chart.data.labels = curvePoints.map(p => p.x);
         chart.update();
     }
 }
 
-// Fonction pour dessiner un point sur le canvas d'animation
 function drawPoint(x, y, isInside, pointSize) {
     monteCarloCtx.beginPath();
     monteCarloCtx.arc(x, y, pointSize, 0, 2 * Math.PI);
@@ -43,91 +42,87 @@ function drawPoint(x, y, isInside, pointSize) {
     monteCarloCtx.fill();
 }
 
-// Fonction principale pour générer les points et mettre à jour l'approximation
 function generatePoint() {
     if (currentPoint >= totalPoints) return;
 
-    const pointsPerFrame = 1;  // Réduction drastique du nombre de points générés par frame
+    let pointsPerFrame = 1;
 
     for (let i = 0; i < pointsPerFrame && currentPoint < totalPoints; i++) {
-        // Générer un point aléatoire dans le carré
+
         const x = Math.random();
         const y = Math.random();
 
-        // Coordonner dans le canvas
         const canvasX = x * width;
         const canvasY = y * height;
-
-        // Vérifier si le point est dans le cercle
         const isInside = (x - 0.5) ** 2 + (y - 0.5) ** 2 <= 0.25;
         if (isInside) insideCircle++;
 
-        // Enregistrer l'historique des points pour la courbe
         pointsHistory.push({ x, y, isInside });
 
-        // Calculer la taille des points
         const pointSize = 5 - Math.min(currentPoint / 10000, 1) * 4;
         drawPoint(canvasX, canvasY, isInside, pointSize);
 
         currentPoint++;
+        if (currentPoint >= 1000 && currentPoint < 5000) {
+            pointsPerFrame = 10;
+        } else if (currentPoint >= 5000 && currentPoint < 20000){
+            pointsPerFrame = 100;
+        } else if (currentPoint >= 20000 && currentPoint < 200000) {
+            pointsPerFrame = 1000;
+        } else if (currentPoint >= 200000) {
+            pointsPerFrame = 50000;
+        }
     }
 
-    // Calculer l'approximation de π
     const piApproximation = (insideCircle / currentPoint) * 4;
 
-    // Enregistrer la donnée pour la courbe
-    curvePoints.push({x: currentPoint, y: piApproximation}); // Ajout de l'approximation à l'historique des points
+    curvePoints.push({x: currentPoint, y: piApproximation});
 
-    // Mettre à jour l'info sous le graphique
     document.getElementById("info").textContent = `Approximation de π : ${piApproximation.toFixed(6)} (Points générés : ${currentPoint})`;
 
-    // Mettre à jour le graphique instantanément
     drawCanvas();
     drawGraph();
 
-    // Requête pour la prochaine frame (réduit la vitesse d'animation)
-    setTimeout(() => requestAnimationFrame(generatePoint), 1); // Délai de 100ms entre chaque frame pour ralentir l'animation
+    setTimeout(() => requestAnimationFrame(generatePoint), 1);
 }
 
-// Initialisation du graphique Chart.js
 const chart = new Chart(graphCtx, {
     type: 'line',
     data: {
-        labels: [], // Les labels de l'axe X, seront mis à jour après chaque point
+        labels: [],
         datasets: [{
             label: 'Approximation de π',
-            data: [], // Les données seront mises à jour au fur et à mesure
+            data: [],
             borderColor: 'green',
-            fill: false, // Pas de remplissage sous la courbe, et pas de points visibles
-            lineTension: 0.1, // Légèrement courbé
-            borderWidth: 1, // Ligne plus fine
+            fill: false,
+            lineTension: 0.1,
+            borderWidth: 0.5,
         }],
     },
     options: {
         responsive: true,
-        maintainAspectRatio: true,  // Fixe la taille du graphique
+        maintainAspectRatio: true,
         scales: {
             y: {
                 beginAtZero: false,
-                max: 3.3, // Limiter la valeur maximale à 3.3
-                min: 3,   // Limiter la valeur minimale à 3
+                max: 3.3,
+                min: 3,
             },
             x: {
-                max: 100000, // Limiter l'axe des X à 1000
+                max: 50000000,
                 ticks: {
-                    stepSize: 1,  // Les ticks sont espacés de 100
+                    stepSize: 1,
                 }
             }
         },
         plugins: {
-            // Ajout de la ligne de référence pour π
             annotation: {
                 annotations: [{
                     type: 'line',
                     mode: 'horizontal',
                     scaleID: 'y',
                     value: Math.PI,
-                    borderColor: 'red', // Couleur visible et différente pour la ligne
+                    borderColor: 'red',
                     borderWidth: 2,
                 }],
             }

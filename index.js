@@ -10,5 +10,5 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function goToAnimation(animationId) {
-    window.location.href = `${animationId}`; // Redirige vers la page d'animation
+    window.location.href = `${animationId}`;
 }

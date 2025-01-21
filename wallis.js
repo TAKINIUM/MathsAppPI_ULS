@@ -11,6 +11,7 @@ const svg = d3.select("#chart")
   .attr("width", width)
   .attr("height", height);
 
+// Echelles
 const xScale = d3.scaleLinear()
   .domain([0, displayLimit])
   .range([50, width - 50]);
@@ -19,6 +20,7 @@ const yScale = d3.scaleLinear()
   .domain([1.2, 2])
   .range([height - 50, 50]);
 
+// Axes
 const xAxis = d3.axisBottom(xScale).ticks(10);
 const yAxis = d3.axisLeft(yScale).ticks(10);
 
@@ -30,7 +32,7 @@ svg.append("g")
   .attr("transform", `translate(50, 0)`)
   .call(yAxis);
 
-// Ligne de la courbe
+// Lignes de courbe
 const line = d3.line()
   .x((d, i) => xScale(i))
   .y(d => yScale(d))
@@ -42,7 +44,7 @@ const path = svg.append("path")
   .attr("stroke", "blue")
   .attr("stroke-width", 2);
 
-// Texte affichant la valeur dynamique de \(\pi/2\)
+// Texte affichant π/2
 const piText = svg.append("text")
   .attr("x", xScale(10))
   .attr("y", yScale(1.95))
@@ -50,7 +52,7 @@ const piText = svg.append("text")
   .style("font-size", "14px")
   .text(`π/2 ≈ ${product.toFixed(10)}`);
 
-// Ajout de la ligne verte pour \(\pi/2\)
+// Ligne horizontale à π/2
 const piLine = svg.append("line")
   .attr("x1", xScale(0))
   .attr("y1", yScale(Math.PI / 2))
@@ -58,9 +60,34 @@ const piLine = svg.append("line")
   .attr("y2", yScale(Math.PI / 2))
   .attr("stroke", "green")
   .attr("stroke-width", 2)
-  .attr("stroke-dasharray", "4"); // Ligne en pointillés
+  .attr("stroke-dasharray", "4");
 
-// Fonction pour formater la formule avec ellipses
+// Ajout de légendes pour les axes
+svg.append("text")
+  .attr("x", width / 2)
+  .attr("y", height - 10)
+  .attr("text-anchor", "middle")
+  .style("font-size", "16px")
+  .text("Nombre d'itérations");
+
+svg.append("text")
+  .attr("transform", "rotate(-90)")
+  .attr("x", -height / 2)
+  .attr("y", 20)
+  .attr("text-anchor", "middle")
+  .style("font-size", "16px")
+  .text("Valeur approchée de P");
+
+// Ajout du texte pour la valeur de π
+const piValueText = svg.append("text")
+  .attr("x", width / 2)
+  .attr("y", height - 30)
+  .attr("text-anchor", "middle")
+  .style("font-size", "16px")
+  .style("fill", "blue")
+  .text(`π ≈ ${(2 * product).toFixed(10)}`);
+
+// Formatage de la formule MathJax
 function formatFormula(terms, maxTerms = 10) {
   if (terms.length <= maxTerms) {
     return terms.join(" \\cdot ");
@@ -70,7 +97,7 @@ function formatFormula(terms, maxTerms = 10) {
   return [...firstPart, "\\dots", ...lastPart].join(" \\cdot ");
 }
 
-// Fonction pour animer le produit de Wallis
+// Animation de la méthode de Wallis
 function animateWallis(iteration) {
   if (iteration > iterations) return;
 
@@ -80,12 +107,10 @@ function animateWallis(iteration) {
 
   product *= fraction;
 
-  // Mettre à jour les données affichées (limitées aux 100 premières itérations)
   if (iteration < displayLimit) {
     values.push(product);
   }
 
-  // Mettre à jour la formule affichée
   const terms = Array.from({ length: iteration + 1 }, (_, i) => {
     const num = i % 2 === 0 ? i + 2 : i + 1;
     const denom = i % 2 === 0 ? i + 1 : i + 2;
@@ -94,33 +119,28 @@ function animateWallis(iteration) {
   const truncatedFormula = formatFormula(terms);
   document.getElementById("formula").innerHTML = `\\( P = ${truncatedFormula} \\)`;
 
-  // Mettre à jour le graphique
   if (iteration < displayLimit) {
     path.datum(values)
       .attr("d", line);
   }
 
-  // Mettre à jour la valeur dynamique de π/2
-  piText.text(`π/2 ≈ ${product.toFixed(10)}`);
+  piText.text(`π/2 ≈ ${product.toFixed(15)}`);
+  piValueText.text(`π ≈ ${(2 * product).toFixed(15)}`);
 
-  // Redessiner les mathématiques
   MathJax.typeset();
 
-  // Ajuster la vitesse de l'animation
   if (iteration < 20) {
-    animationSpeed = 400; // Lent au début
+    animationSpeed = 400; 
   } else if (iteration < 100) {
-    animationSpeed = 20; // Plus rapide
+    animationSpeed = 20;
   } else if (Math.abs(product - Math.PI / 2) < stopThreshold) {
     document.getElementById("formula").innerHTML += `<br>\\( P \\approx ${product.toFixed(10)} \\)`;
-    return; // Stopper l'animation
+    return;
   } else {
-    animationSpeed = 0.25; // Très rapide
+    animationSpeed = 0.25; 
   }
 
-  // Prochaine itération
   setTimeout(() => animateWallis(iteration + 1), animationSpeed);
 }
 
-// Initialiser l'animation
 animateWallis(0);

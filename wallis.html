@@ -18,10 +18,15 @@
                 margin: 20px 0;
                 word-wrap: break-word;
             }
-                #chart {
+            #chart {
                 margin: auto;
                 width: 80%;
                 height: 400px;
+            }
+            #Result {
+                font-size: 26px;
+                padding: 20px;
+                margin: 10px;
             }
         </style>
     </head>
@@ -29,6 +34,7 @@
         <h1>Le Produit de Wallis</h1>
         <div id="formula">\( P = \frac{2}{1} \cdot \frac{2}{3} \)</div>
         <div id="chart"></div>
+        <div id="Result"></div>
         <button id="backToDiapo" onclick="goToMainPage(8)">Retour au diaporama</button> 
         <script src="retourDiapo.js"></script>
         <script src="wallis.js"></script>

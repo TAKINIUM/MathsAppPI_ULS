@@ -107,28 +107,26 @@ const chart = new Chart(graphCtx, {
                 beginAtZero: false,
                 max: 3.3,
                 min: 3,
+                title: {
+                    display: true,
+                    text: 'Approximation de π', // Légende pour l'axe des ordonnées
+                },
             },
             x: {
                 max: 50000000,
                 ticks: {
                     stepSize: 1,
-                }
+                },
+                title: {
+                    display: true,
+                    text: 'Points générés', // Légende pour l'axe des abscisses
+                },
             }
         },
-        plugins: {
-            annotation: {
-                annotations: [{
-                    type: 'line',
-                    mode: 'horizontal',
-                    scaleID: 'y',
-                    value: Math.PI,
-                    borderColor: 'red',
-                    borderWidth: 2,
-                }],
-            }
-        }
     }
 });
+
+
 
 // Initialiser l'animation
 drawCanvas();
